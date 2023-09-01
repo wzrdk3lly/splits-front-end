@@ -124,7 +124,7 @@ export async function connectWallet() {
       });
 
       const obj = {
-        status: "Initiate a split when ready..",
+        status: "Perform a split ...",
         address: addressArray[0],
       };
 

@@ -19,22 +19,23 @@ function App() {
   const [splitHistory, setSplitHistory] = useState("");
 
 
-  // useEffect(() => {
-  // async function fetchConnectWalletData(){
+  useEffect(() => {
+  async function fetchConnectWalletData(){
    
-  //   const {address, status} = await getCurrentWalletConnected();
+    const {address, status} = await getCurrentWalletConnected();
+    const splitHistoryResponse = await getSplitHistory(address);
+    // const splitHistoryResponse = await getSplitHistory(fromAddress);
+    setStatus(status)
+    setFromAddress(address);
+    setSplitHistory(splitHistoryResponse)
   
-  //   // const splitHistoryResponse = await getSplitHistory(fromAddress);
-  //   setStatus(status)
-  //   setFromAddress(address);
-  
-  // }
+  }
 
   
 
-  // fetchConnectWalletData()
-  // // addSmartContractListener();
-  // }, [])
+  fetchConnectWalletData()
+  // addSmartContractListener();
+  }, [])
 
   //  function addSmartContractListener(){
   //   // splitsContract.events.splitSuccess({}, (error, data) => {
@@ -62,7 +63,7 @@ function App() {
     console.log("performing split")
 }
   async function connectWalletPressed(){
-    console.log("wallet connect attempt...")
+    
     const walletResponse =  await connectWallet();
 
     // Sets the status and from address but this doesn't change until the whole function completes 
