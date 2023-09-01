@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Header from './components/Header'
-import {getSplitHistory, splitsContract, connectWallet} from "../utils/interact"
+import {getSplitHistory, splitsContract, connectWallet, getCurrentWalletConnected} from "../utils/interact"
 import { stringify } from 'postcss';
 
 function App() {
@@ -12,24 +12,29 @@ function App() {
   - splits contract address = 0xC97c3Ad1Cd7160Dc5939068a344A1850c44eb27B
   */
 
-  const [walletAddress, setWalletAddress] = useState("");
-  const [status, setStatus] = useState("")
+
+  const [status, setStatus] = useState("Waiting for wallet connect...")
   const [toAddress, setToAddress] = useState("");
   const [fromAddress, setFromAddress] = useState("")
   const [splitHistory, setSplitHistory] = useState("");
 
-  useEffect(() => {
 
-  async function fetchData(){
-    const splitHistoryResponse = await getSplitHistory(fromAddress);
-    setSplitHistory(splitHistoryResponse)
-  }
+  // useEffect(() => {
+  // async function fetchConnectWalletData(){
+   
+  //   const {address, status} = await getCurrentWalletConnected();
+  
+  //   // const splitHistoryResponse = await getSplitHistory(fromAddress);
+  //   setStatus(status)
+  //   setFromAddress(address);
+  
+  // }
 
   
 
-  fetchData();
-  // addSmartContractListener();
-  }, [])
+  // fetchConnectWalletData()
+  // // addSmartContractListener();
+  // }, [])
 
   //  function addSmartContractListener(){
   //   // splitsContract.events.splitSuccess({}, (error, data) => {
@@ -51,18 +56,23 @@ function App() {
 // data.returnValues[0] +data.returnValues[1] s
   // }
 
-  async function addWalletListener(){
-   
-  }
+  async function addWalletListener(){}
 
    async function performSplitPressed(){
     console.log("performing split")
 }
   async function connectWalletPressed(){
     console.log("wallet connect attempt...")
-    const walletResponse = await connectWallet();
+    const walletResponse =  await connectWallet();
+
+    // Sets the status and from address but this doesn't change until the whole function completes 
     setStatus(walletResponse.status) 
     setFromAddress(walletResponse.address)
+
+    const splitHistoryResponse = await getSplitHistory(walletResponse.address)
+    setSplitHistory(splitHistoryResponse)
+   
+     
   }
 
   return (
@@ -70,7 +80,7 @@ function App() {
     {/* Header component with the splits logo */}
      <Header
       walletAddress={fromAddress}
-      handleConnect={() => connectWalletPressed()}
+      handleConnect={connectWalletPressed}
       />
 
      {/* Main Card with */}
@@ -90,7 +100,7 @@ function App() {
         </form>
 
         <div className='mt-4'>Status: {status}</div>
-        <div className='mt-4'>Split History: {splitHistory === "NA" ? splitHistory : splitHistory + "ETH"}</div>
+        <div className='mt-4'>Split History: {splitHistory === "" ? splitHistory : splitHistory + " ETH"}</div>
         
       
         <div className='flex justify-center mt-4'>
