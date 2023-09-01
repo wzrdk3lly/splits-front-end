@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 
 import Header from './components/Header'
-import {getSplitHistory } from "../utils/interact"
+import {getSplitHistory, splitsContract, connectWallet} from "../utils/interact"
+import { stringify } from 'postcss';
 
 function App() {
 
@@ -12,36 +13,63 @@ function App() {
   */
 
   const [walletAddress, setWalletAddress] = useState("");
+  const [status, setStatus] = useState("")
   const [toAddress, setToAddress] = useState("");
   const [fromAddress, setFromAddress] = useState("")
   const [splitHistory, setSplitHistory] = useState("");
 
   useEffect(() => {
-    
+
   async function fetchData(){
     const splitHistoryResponse = await getSplitHistory(fromAddress);
     setSplitHistory(splitHistoryResponse)
   }
 
+  
+
   fetchData();
+  // addSmartContractListener();
   }, [])
 
-  function addSmartContractListener(){}
+  //  function addSmartContractListener(){
+  //   // splitsContract.events.splitSuccess({}, (error, data) => {
+  //   //   if (error){
+  //   //     setStatus(" Sorry: ", error.message)
+  //   //   }else{
+  //   //     setStatus(data.returnValues[2].toString() )
+  //   //   }
+  //   // })
 
-  function addWalletListener(){}
+  //    splitsContract.on("splitSuccess", (from, to, value) => {
+  //     console.log("Transfer Event emitted")
+  //     console.log(JSON.stringify(from))
+  //     console.log(JSON.stringify(to))
+  //     console.log(JSON.stringify(value))
+  //   })
+
+   
+// data.returnValues[0] +data.returnValues[1] s
+  // }
+
+  async function addWalletListener(){
+   
+  }
 
    async function performSplitPressed(){
     console.log("performing split")
 }
   async function connectWalletPressed(){
-    console.log("wallet connect attempt")
+    console.log("wallet connect attempt...")
+    const walletResponse = await connectWallet();
+    setStatus(walletResponse.status) 
+    setFromAddress(walletResponse.address)
   }
 
   return (
    <div >
     {/* Header component with the splits logo */}
      <Header
-      walletAddress={walletAddress}
+      walletAddress={fromAddress}
       handleConnect={() => connectWalletPressed()}
       />
 
@@ -55,14 +83,14 @@ function App() {
         <form className="mt-2" action="">
           <div className='grid grid-cols-1 gap-y-2'>
           <label htmlFor="fromAddress">From Address</label>
-          <input id="fromAddress" className="bg-slate-400" type="text" name='fromAddress' value="" readOnly/>
+          <input id="fromAddress" className="bg-slate-400" type="text" name='fromAddress' value={fromAddress} readOnly/>
           <label htmlFor="toAddress">To Address</label>
           <input id="toAddress" className="bg-slate-400" type="toAddress" name='toAddress' value={toAddress} onChange={(e) => setToAddress(e.target.value)} />
           </div>
         </form>
 
-        <div className='mt-4'>Status: </div>
-        <div className='mt-4'>Split History: {splitHistory === "NA" ? splitHistory : "ETH"}</div>
+        <div className='mt-4'>Status: {status}</div>
+        <div className='mt-4'>Split History: {splitHistory === "NA" ? splitHistory : splitHistory + "ETH"}</div>
         
       
         <div className='flex justify-center mt-4'>

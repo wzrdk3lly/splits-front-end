@@ -97,7 +97,11 @@ const splitsABI = [
   },
 ];
 
-const splitsContract = new ethers.Contract(splitsAddress, splitsABI, provider);
+export const splitsContract = new ethers.Contract(
+  splitsAddress,
+  splitsABI,
+  provider
+);
 
 export async function getSplitHistory(fromAddress) {
   if (fromAddress == "") {
@@ -107,11 +111,34 @@ export async function getSplitHistory(fromAddress) {
   const historyInWei = await splitsContract.getSplitHistory(fromAddress);
   const historyToEth = formatEther(historyInWei);
   console.log("Grabbing the split history for ", historyToEth);
-  return historyToEth.substring(0, 5);
+  return historyToEth.substring(0, 7);
 }
 
 export async function performSplit(toAddress, value) {}
 
-export async function connectWallet() {}
+export async function connectWallet() {
+  if (window.ethereum) {
+    try {
+      const addressArray = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const obj = {
+        status: "Perform a split",
+        address: addressArray[0],
+      };
+      return obj;
+    } catch (err) {
+      return {
+        address: "",
+        status: "😥 " + err.message,
+      };
+    }
+  } else {
+    return {
+      address: "",
+      status: "",
+    };
+  }
+}
 
 export async function getCurrentWalletConnected() {}
