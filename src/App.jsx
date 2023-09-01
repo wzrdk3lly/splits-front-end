@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Header from './components/Header'
+import {getSplitHistory } from "../utils/interact"
 
 function App() {
 
@@ -13,11 +14,20 @@ function App() {
   const [walletAddress, setWalletAddress] = useState("");
   const [toAddress, setToAddress] = useState("");
   const [fromAddress, setFromAddress] = useState("")
+  const [splitHistory, setSplitHistory] = useState("");
 
-  useEffect(async () => {
+  useEffect(() => {
+  async function fetchData(){
+    const splitHistoryResponse = await getSplitHistory(fromAddress);
+    setSplitHistory(splitHistoryResponse)
+  }
+
+  fetchData();
+  //  const lastSplitawait = await getSplitHistory("0x81215d34367AF48d01E728AfF2976d9Df32fE604")
+  //  setSplitHistory(lastSplitawait)
 
   }, [])
-  
+
   function addSmartContractListener(){}
 
   function addWalletListener(){}
@@ -54,7 +64,7 @@ function App() {
         </form>
 
         <div className='mt-4'>Status: </div>
-        <div className='mt-4'>Split History: </div>
+        <div className='mt-4'>Split History: {splitHistory}</div>
         
       
         <div className='flex justify-center mt-4'>
