@@ -17,15 +17,13 @@ function App() {
   const [splitHistory, setSplitHistory] = useState("");
 
   useEffect(() => {
+    
   async function fetchData(){
     const splitHistoryResponse = await getSplitHistory(fromAddress);
     setSplitHistory(splitHistoryResponse)
   }
 
   fetchData();
-  //  const lastSplitawait = await getSplitHistory("0x81215d34367AF48d01E728AfF2976d9Df32fE604")
-  //  setSplitHistory(lastSplitawait)
-
   }, [])
 
   function addSmartContractListener(){}
@@ -64,7 +62,7 @@ function App() {
         </form>
 
         <div className='mt-4'>Status: </div>
-        <div className='mt-4'>Split History: {splitHistory}</div>
+        <div className='mt-4'>Split History: {splitHistory === "NA" ? splitHistory : "ETH"}</div>
         
       
         <div className='flex justify-center mt-4'>

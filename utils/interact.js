@@ -1,6 +1,6 @@
 // Add alchmey add ons from https://github.com/alchemyplatform/Alchemy-Hacker-Handbook/blob/main/evm_snippets/LoadContract/load-contract.js
 import { Network, Alchemy } from "alchemy-sdk";
-import { ethers } from "ethers";
+import { ethers, formatEther } from "ethers";
 // import dotenv from "dotenv";
 
 // dotenv.config();
@@ -104,9 +104,10 @@ export async function getSplitHistory(fromAddress) {
     console.log("...Couldn't find history for non existing address");
     return "NA";
   }
-  const history = await splitsContract.getSplitHistory(fromAddress);
-  console.log("Grabbing the split history for ", history);
-  return history;
+  const historyInWei = await splitsContract.getSplitHistory(fromAddress);
+  const historyToEth = formatEther(historyInWei);
+  console.log("Grabbing the split history for ", historyToEth);
+  return historyToEth.substring(0, 5);
 }
 
 export async function performSplit(toAddress, value) {}
