@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Header from './components/Header'
 
@@ -14,14 +14,18 @@ function App() {
   const [toAddress, setToAddress] = useState("");
   const [fromAddress, setFromAddress] = useState("")
 
-  // getConnected wallet address and set the state of connectedWallet
+  useEffect(async () => {
 
-  // getSplitHistory async function using current connected wallet address 
+  }, [])
+  
+  function addSmartContractListener(){}
 
-   async function performSplit(){
+  function addWalletListener(){}
+
+   async function performSplitPressed(){
     console.log("performing split")
 }
-  function connectWallet(){
+  async function connectWalletPressed(){
     console.log("wallet connect attempt")
   }
 
@@ -30,41 +34,37 @@ function App() {
     {/* Header component with the splits logo */}
      <Header
       walletAddress={walletAddress}
-      handleConnect={() => connectWallet()}
+      handleConnect={() => connectWalletPressed()}
       />
 
      {/* Main Card with */}
      <div className='flex justify-center items-center h-screen text-white'>
       <div className='border w-[40%] p-4'>
+
         <h1 className='text-2xl font-bold'>Perform Split</h1>
         <span>Send half of your balance to the "To Address" </span>
+
         <form className="mt-2" action="">
           <div className='grid grid-cols-1 gap-y-2'>
           <label htmlFor="fromAddress">From Address</label>
-          <input className="bg-slate-400" type="text" name='fromAddress' value="" readOnly/>
+          <input id="fromAddress" className="bg-slate-400" type="text" name='fromAddress' value="" readOnly/>
           <label htmlFor="toAddress">To Address</label>
-          <input className="bg-slate-400" type="toAddress" name='toAddress' value={toAddress} onChange={(e) => setToAddress(e.target.value)} />
+          <input id="toAddress" className="bg-slate-400" type="toAddress" name='toAddress' value={toAddress} onChange={(e) => setToAddress(e.target.value)} />
           </div>
         </form>
+
         <div className='mt-4'>Status: </div>
         <div className='mt-4'>Split History: </div>
         
       
         <div className='flex justify-center mt-4'>
-        <button className="border h-8 w-36" onClick={performSplit}>Split</button>
+        <button className="border h-8 w-36" onClick={performSplitPressed}>Split</button>
         </div>
-       
       </div>
-  
-
      </div>
-
-    
-     
 
    </div>
      
-    
   )
 }
 
