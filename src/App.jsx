@@ -18,6 +18,8 @@ function App() {
   const [fromAddress, setFromAddress] = useState("")
   const [splitHistory, setSplitHistory] = useState("");
   const [fromAddressBalance, setFromAddressBalance] = useState("");
+  const [isEthAddress, setIsEthAddress] = useState(true)
+
 
 
   useEffect(() => {
@@ -87,12 +89,25 @@ function App() {
   // }
 
   
- 
-  
+
    async function performSplitPressed(){
-    console.log("performing split")
-    const balanceToSplit = fromAddressBalance / 2;
-    console.log("split with: ", balanceToSplit)
+
+    if(toAddress.length == 42 & toAddress.substring(0,2).toUpperCase() == "0X"){
+      console.log("split check success")
+      setIsEthAddress(true)
+      setStatus("Split Submitted")
+  
+      const balanceToSplit = fromAddressBalance / 2;
+      console.log("split with: ", balanceToSplit)
+  
+     }
+     else{
+      setIsEthAddress(false)
+      setStatus("Incorrect Eth Address: Change the To address to be a valid eth address")
+      console.log("wrong address")
+     }
+
+    
 }
   async function connectWalletPressed(){
     
@@ -131,17 +146,23 @@ function App() {
           <div className='grid grid-cols-1 gap-y-2'>
           <label htmlFor="fromAddress">From Address</label>
           <input id="fromAddress" className="bg-slate-400" type="text" name='fromAddress' value={fromAddress} readOnly/>
-          <label htmlFor="toAddress">To Address</label>
-          <input id="toAddress" className="bg-slate-400" type="toAddress" name='toAddress' value={toAddress} onChange={(e) => setToAddress(e.target.value)} />
+          <label htmlFor="toAddress">To address</label>
+          {isEthAddress ?  <input id="toAddress" className="bg-slate-400" type="toAddress" name='toAddress' value={toAddress} onChange={(e) => setToAddress(e.target.value)} /> : <input id="toAddress" className="border border-red-500 bg-slate-400" type="toAddress" name='toAddress' value={toAddress} onChange={(e) => setToAddress(e.target.value)} /> }
+         
           </div>
         </form>
 
         <div className='mt-4'>Status: {status}</div>
         <div className='mt-4'>Split History: {splitHistory === "" ? splitHistory : splitHistory + " ETH"}</div>
         
-      
+        
         <div className='flex justify-center mt-4'>
+    
+        <div>
+        
         <button className="border h-8 w-36" onClick={performSplitPressed}>Split</button>
+     
+        </div>
         </div>
       </div>
      </div>
