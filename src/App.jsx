@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Header from './components/Header'
-import {getSplitHistory, splitsContract, connectWallet, getCurrentWalletConnected} from "../utils/interact"
+import {getSplitHistory, splitsContract, connectWallet, getCurrentWalletConnected, getAccountBalance} from "../utils/interact"
 import { stringify } from 'postcss';
 
 function App() {
@@ -17,6 +17,7 @@ function App() {
   const [toAddress, setToAddress] = useState("");
   const [fromAddress, setFromAddress] = useState("")
   const [splitHistory, setSplitHistory] = useState("");
+  const [fromAddressBalance, setFromAddressBalance] = useState("");
 
 
   useEffect(() => {
@@ -24,11 +25,16 @@ function App() {
    
     const {address, status} = await getCurrentWalletConnected();
     const splitHistoryResponse = await getSplitHistory(address);
-    // const splitHistoryResponse = await getSplitHistory(fromAddress);
+    const {addressStatuss, balance} = await getAccountBalance(address);
+    console.log(`balance of wallet ${address}, is ${balance}`)
+
+    
+
+    // Need to update the status, address, splitHistory when reload occurs. This is needed because MM will show up as connected on first load if it's been connected in the past
     setStatus(status)
-    setFromAddress(address);
+    setFromAddress(address)
     setSplitHistory(splitHistoryResponse)
-  
+    setFromAddressBalance(balance)
   }
 
   
@@ -61,6 +67,8 @@ function App() {
 
    async function performSplitPressed(){
     console.log("performing split")
+    const balanceToSplit = fromAddressBalance / 2;
+    console.log("split with: ", balanceToSplit)
 }
   async function connectWalletPressed(){
     
@@ -69,6 +77,10 @@ function App() {
     // Sets the status and from address but this doesn't change until the whole function completes 
     setStatus(walletResponse.status) 
     setFromAddress(walletResponse.address)
+
+    const {addressStatus, balance} = await getAccountBalance(walletResponse.address);
+    console.log("grabbing balance for initial connect", balance)
+    setFromAddressBalance(balance)
 
     const splitHistoryResponse = await getSplitHistory(walletResponse.address)
     setSplitHistory(splitHistoryResponse)
