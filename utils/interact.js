@@ -173,3 +173,30 @@ export async function getCurrentWalletConnected() {
     };
   }
 }
+
+export async function getAccountBalance(accountAddress) {
+  if (window.ethereum) {
+    try {
+      const balance = await window.ethereum.request({
+        method: "eth_getBalance",
+        params: [accountAddress, "latest"],
+      });
+      const obj = {
+        status: "balance request sent",
+        balance: ethers.formatEther(balance),
+      };
+
+      return obj;
+    } catch (err) {
+      return {
+        status: err.message,
+        balance: "",
+      };
+    }
+  } else {
+    return {
+      status: "download mm fam",
+      balance: "",
+    };
+  }
+}
