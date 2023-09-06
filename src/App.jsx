@@ -22,14 +22,10 @@ function App() {
 
   useEffect(() => {
   async function fetchConnectWalletData(){
-   
     const {address, status} = await getCurrentWalletConnected();
     const splitHistoryResponse = await getSplitHistory(address);
     const {addressStatuss, balance} = await getAccountBalance(address);
     console.log(`balance of wallet ${address}, is ${balance}`)
-
-    
-
     // Need to update the status, address, splitHistory when reload occurs. This is needed because MM will show up as connected on first load if it's been connected in the past
     setStatus(status)
     setFromAddress(address)
@@ -37,9 +33,36 @@ function App() {
     setFromAddressBalance(balance)
   }
 
-  
+   function addWalletListener(){
+    if(window.ethereum){
+      window.ethereum.on("accountsChanged", (arrayOfAccounts)=>{
+        if (arrayOfAccounts.length > 0){
+          async function updateAccounts(arrayOfAccounts){
+            console.log("updating accounts")
+            const splitHistoryResponse = await getSplitHistory(arrayOfAccounts[0]);
+            const {addressStatuss, balance} = await getAccountBalance(arrayOfAccounts[0]);
+            setFromAddress(arrayOfAccounts[0])
+            setStatus("Accounts changed")
+            setSplitHistory(splitHistoryResponse)
+            setFromAddressBalance(balance)
+          }
+          updateAccounts(arrayOfAccounts)
+        }
+        else{
+          setFromAddress("")
+          setStatus("connnect to mm")
+        }
+      })
+    }
+    else{
+      setStatus("you must install metamask")
+    }
+  }
+
+
 
   fetchConnectWalletData()
+  addWalletListener();
   // addSmartContractListener();
   }, [])
 
@@ -63,8 +86,9 @@ function App() {
 // data.returnValues[0] +data.returnValues[1] s
   // }
 
-  async function addWalletListener(){}
-
+  
+ 
+  
    async function performSplitPressed(){
     console.log("performing split")
     const balanceToSplit = fromAddressBalance / 2;
