@@ -16,8 +16,8 @@ const settings = {
 const alchemy = new Alchemy(settings);
 const provider = await alchemy.config.getProvider();
 
-const splitsAddress = "0xC97c3Ad1Cd7160Dc5939068a344A1850c44eb27B";
-const splitsABI = [
+export const splitsAddress = "0xC97c3Ad1Cd7160Dc5939068a344A1850c44eb27B";
+export const splitsABI = [
   {
     inputs: [],
     name: "FailedToSend",

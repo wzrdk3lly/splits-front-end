@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import {
-  splitsContract,
+  splitsAddress,
+  splitsABI,
   getSplitHistory,
   performSplit,
   connectWallet,
   getCurrentWalletConnected,
   getAccountBalance,
 } from "../utils/interact";
+import { ethers } from "ethers";
 
 function App() {
   const [status, setStatus] = useState("Waiting for wallet connect...");
@@ -16,21 +18,41 @@ function App() {
   const [splitHistory, setSplitHistory] = useState("");
   const [fromAddressBalance, setFromAddressBalance] = useState("");
   const [isEthAddress, setIsEthAddress] = useState(true);
+  const [splitEvent, setSplitEvent] = useState({
+    from: "null",
+    to: "null",
+    value: "null",
+  });
 
   useEffect(() => {
     fetchConnectWalletData();
     addWalletListener();
-    // addSmartContractListener();
+    addSmartContractListener();
   }, []);
 
-  // async function addSmartContractListener() {
-  //   splitsContract.addListener("splitSuccess", (from, to, value) => {
-  //     console.log("Transfer Event emitted");
-  //     console.log(JSON.stringify(from));
-  //     console.log(JSON.stringify(to));
-  //     console.log(JSON.stringify(value));
-  //   });
-  // }
+  async function addSmartContractListener() {
+    if (fromAddress !== "") {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const splitsContract = new ethers.Contract(
+        splitsAddress,
+        splitsABI,
+        provider
+      );
+
+      splitsContract.on("splitSuccess", (from, to, value) => {
+        console.log("Split Event emitted");
+        console.log(JSON.stringify(from));
+        console.log(JSON.stringify(to));
+        console.log(JSON.stringify(String(value)));
+        let newSplitEvent = {
+          from: from,
+          to: to,
+          value: String(value),
+        };
+        setSplitEvent(newSplitEvent);
+      });
+    }
+  }
 
   function addWalletListener() {
     if (window.ethereum) {
@@ -175,6 +197,11 @@ function App() {
           <div className="mt-4">
             Split History:{" "}
             {splitHistory === "" ? splitHistory : splitHistory + " ETH"}
+          </div>
+          <div className="mt-4">
+            Latest Events: (From {JSON.stringify(splitEvent.from)}) (To{" "}
+            {JSON.stringify(splitEvent.to)}) (Value
+            {JSON.stringify(splitEvent.value)})
           </div>
 
           <div className="flex justify-center mt-4">
