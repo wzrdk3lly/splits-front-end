@@ -1,5 +1,6 @@
 // Add alchmey add ons from https://github.com/alchemyplatform/Alchemy-Hacker-Handbook/blob/main/evm_snippets/LoadContract/load-contract.js
 import { Network, Alchemy } from "alchemy-sdk";
+
 import { ethers, formatEther } from "ethers";
 // import dotenv from "dotenv";
 
@@ -114,7 +115,43 @@ export async function getSplitHistory(fromAddress) {
   return historyToEth.substring(0, 7);
 }
 
-export async function performSplit(toAddress, value) {}
+export async function performSplit(fromAddress, toAddress, valueInEth) {
+  // value comes in as a number as eth, so we need to convert back to wei and as a string.
+  console.log("value before conversion", valueInEth.toString());
+  let valueInWei = await ethers.parseEther(valueInEth.toString());
+  console.log("value in eth", valueInWei);
+
+  let value = valueInWei.toString();
+  console.log("final value is", value);
+
+  let valueInHex = ethers.toQuantity(value);
+  console.log("the value in hex is ", valueInHex);
+
+  let data = splitsContract.interface.encodeFunctionData("sendSplit", [
+    toAddress,
+  ]);
+
+  let transactionParameters = {
+    from: fromAddress,
+    to: splitsAddress,
+    data: data,
+    value: valueInHex,
+  };
+
+  try {
+    const txHash = await window.ethereum.request({
+      method: "eth_sendTransaction",
+      params: [transactionParameters],
+    });
+    return {
+      status: txHash,
+    };
+  } catch (error) {
+    return {
+      status: error.message,
+    };
+  }
+}
 
 export async function connectWallet() {
   if (window.ethereum) {
