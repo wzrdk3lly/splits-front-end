@@ -2,14 +2,18 @@
 import { Network, Alchemy } from "alchemy-sdk";
 
 import { ethers, formatEther } from "ethers";
-// import dotenv from "dotenv";
+import dotenv from "dotenv";
 
-// dotenv.config();
+dotenv.config();
 
 // config alchemy provider
 
+// const settings = {
+//   apiKey: import.meta.VITE_ALCHEMY_API_KEY,
+//   network: Network.ETH_GOERLI,
+// };
 const settings = {
-  apiKey: import.meta.VITE_ALCHEMY_API_KEY,
+  apiKey: process.env.VITE_ALCHEMY_API_KEY,
   network: Network.ETH_GOERLI,
 };
 
