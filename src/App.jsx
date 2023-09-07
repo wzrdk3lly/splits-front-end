@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import Header from './components/Header'
 import {getSplitHistory,performSplit, connectWallet, getCurrentWalletConnected, getAccountBalance} from "../utils/interact"
-import { stringify } from 'postcss';
+
 
 function App() {
 
@@ -92,6 +92,8 @@ function App() {
 
    async function performSplitPressed(){
 
+    //from balance can have a max trail of 18 digits
+
     if(toAddress.length == 42 & toAddress.substring(0,2).toUpperCase() == "0X"){
       console.log("split check success")
       setIsEthAddress(true)
@@ -99,18 +101,20 @@ function App() {
   
       const balanceToSplit = fromAddressBalance / 2;
 
+      const fixedBalancedToSplit = balanceToSplit.toFixed(17)
 
-      console.log("split with: ", balanceToSplit)
 
-     let response = await performSplit(fromAddress, toAddress, balanceToSplit);
+      console.log("split with: ", fixedBalancedToSplit)
+
+     let response = await performSplit(fromAddress, toAddress, fixedBalancedToSplit);
      console.log("the response of attempting the tx is: ", response)
+     const splitHistoryResponse = await getSplitHistory(fromAddress);
      setStatus(response.status)
-
-
+     setSplitHistory(splitHistoryResponse)
      }
      else{
       setIsEthAddress(false)
-      setStatus("Incorrect Eth Address: Change the To address to be a valid eth address")
+      setStatus("Incorrect Eth Address: Change the `To address` to be a valid eth address")
       console.log("wrong address")
      }
 
@@ -142,8 +146,8 @@ function App() {
       handleConnect={connectWalletPressed}
       />
 
-     {/* Main Card with */}
-     <div className='flex justify-center items-center h-screen text-white'>
+     {/* Main Card */}
+     <div className='flex justify-center items-center text-white mt-20'>
       <div className='border w-[50%] max-w-prose p-4'>
 
         <h1 className='text-2xl font-bold'>Perform Split</h1>

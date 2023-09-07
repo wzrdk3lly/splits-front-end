@@ -116,9 +116,9 @@ export async function getSplitHistory(fromAddress) {
 }
 
 export async function performSplit(fromAddress, toAddress, valueInEth) {
-  // value comes in as a number as eth, so we need to convert back to wei and as a string.
-  console.log("value before conversion", valueInEth.toString());
-  let valueInWei = await ethers.parseEther(valueInEth.toString());
+  // value comes in as string, so we need to convert it to weig
+  console.log("value before conversion", valueInEth);
+  let valueInWei = await ethers.parseEther(valueInEth);
   console.log("value in eth", valueInWei);
 
   let value = valueInWei.toString();
