@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import Header from './components/Header'
-import {getSplitHistory, splitsContract, connectWallet, getCurrentWalletConnected, getAccountBalance} from "../utils/interact"
+import {getSplitHistory,performSplit, connectWallet, getCurrentWalletConnected, getAccountBalance} from "../utils/interact"
 import { stringify } from 'postcss';
 
 function App() {
@@ -98,8 +98,15 @@ function App() {
       setStatus("Split Submitted")
   
       const balanceToSplit = fromAddressBalance / 2;
+
+
       console.log("split with: ", balanceToSplit)
-  
+
+     let response = await performSplit(fromAddress, toAddress, balanceToSplit);
+     console.log("the response of attempting the tx is: ", response)
+     setStatus(response.status)
+
+
      }
      else{
       setIsEthAddress(false)
@@ -137,7 +144,7 @@ function App() {
 
      {/* Main Card with */}
      <div className='flex justify-center items-center h-screen text-white'>
-      <div className='border w-[40%] p-4'>
+      <div className='border w-[50%] max-w-prose p-4'>
 
         <h1 className='text-2xl font-bold'>Perform Split</h1>
         <span>Send half of your balance to the "To Address" </span>
