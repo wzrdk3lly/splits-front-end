@@ -1,8 +1,21 @@
-# React + Vite
+# Splits Dapp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the front end for a simple dapp that splits the total balance of your wallet in half and sends it to the user of your choice.
 
-Currently, two official plugins are available:
+See the live dapp [here](https://splitsdapp.netlify.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Contracts are deployed on GOERLI
+
+# Tools Used
+
+- Metamask
+- Infura
+- Alchemy
+- Ethers
+- vite
+- React
+- Tailwind
+
+# Bugs/Improvements
+
+- Contract event apear to work when deployed locally but not in my netlifly deployment
