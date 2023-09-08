@@ -120,6 +120,7 @@ function App() {
       const splitHistoryResponse = await getSplitHistory(fromAddress);
       setStatus(response.status);
       setSplitHistory(splitHistoryResponse);
+      setSplitEvent("Waiting for event to load....");
     } else {
       setIsEthAddress(false);
       setStatus(
