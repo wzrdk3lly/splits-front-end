@@ -1,21 +1,11 @@
-// Add alchmey add ons from https://github.com/alchemyplatform/Alchemy-Hacker-Handbook/blob/main/evm_snippets/LoadContract/load-contract.js
 import { Network, Alchemy } from "alchemy-sdk";
 
 import { ethers, formatEther } from "ethers";
-// import dotenv from "dotenv";
-
-// dotenv.config();
-
-// config alchemy provider
 
 const settings = {
   apiKey: import.meta.VITE_ALCHEMY_API_KEY,
   network: Network.ETH_GOERLI,
 };
-// const settings = {
-//   apiKey: process.env.VITE_ALCHEMY_API_KEY,
-//   network: Network.ETH_GOERLI,
-// };
 
 const alchemy = new Alchemy(settings);
 const provider = await alchemy.config.getProvider();
