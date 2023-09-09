@@ -30,7 +30,7 @@ function App() {
     addSmartContractListener();
   }, []);
 
-  async function addSmartContractListener() {
+  function addSmartContractListener() {
     if (fromAddress !== "") {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const splitsContract = new ethers.Contract(
