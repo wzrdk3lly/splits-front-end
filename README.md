@@ -18,4 +18,12 @@ Contracts are deployed on GOERLI
 
 # Bugs/Improvements
 
-- Contract event apear to work when deployed locally but not in my netlifly deployment
+- Contract events don't appear to work all the time. It's as if the listener only works sometimes.
+
+## Lessons Learned
+
+- Using Metamask to make smart contract calls
+- Interacting with Metamask message request
+- When deploying a vite app use the dist folder
+- setting contract listeners and waiting for evens to fire with Ethersjs
+- asynchronous coding fundamentals
